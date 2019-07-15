@@ -9,4 +9,4 @@ $ python userstatistics/manage.py runserver   #this to run Django Server
 $ npm run dev   #this to run webpack
 ```
 
-if all is ok, the server will be  accesible via http://localhost:8000/ 
+if all is ok, the server will be  accessible via http://localhost:8000/ 
