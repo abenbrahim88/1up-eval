@@ -60,19 +60,16 @@ export const login = (username, password) => dispatch => {
 };
 
 // REGISTER USER
-export const register = ({ username, password, email }) => dispatch => {
+export const register = data => dispatch => {
   // Headers
   const config = {
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "multipart/form-data"
     }
   };
 
-  // Request Body
-  const body = JSON.stringify({ username, email, password });
-
   axios
-    .post("/api/auth/register", body, config)
+    .post("/api/auth/register", data, config)
     .then(res => {
       dispatch({
         type: REGISTER_SUCCESS,
@@ -80,7 +77,7 @@ export const register = ({ username, password, email }) => dispatch => {
       });
     })
     .catch(err => {
-      alert("Register Failed, Maybe the User Already Exist");
+      alert(`Register failed,something went wrong! ${err}`);
       dispatch({
         type: REGISTER_FAIL
       });

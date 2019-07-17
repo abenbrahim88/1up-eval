@@ -1,16 +1,15 @@
 import axios from "axios";
+import { GET_USERS } from "./types";
 
-import { GET_STATS, DELETE_STAT, ADD_STAT } from "./types";
-
-//GET STATS
-export const getStats = () => dispatch => {
+//GET Users
+export const getUsers = () => dispatch => {
   axios
-    .get("/api/stats/")
+    .get("/api/users/")
     .then(res => {
       dispatch({
-        type: GET_STATS,
+        type: GET_USERS,
         payload: res.data
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => alert("there was a problem getting the list of users"));
 };

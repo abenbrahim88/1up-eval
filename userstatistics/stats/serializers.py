@@ -1,18 +1,25 @@
 from rest_framework import serializers
 from stats.models import LoginDates
-from django.contrib.auth.models import User
+from accounts.models import CustomUser
 
 
 class LoginDatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoginDates
-        fields = ('login_at',)
+        fields = ('month', 'value')
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    statistics = LoginDatesSerializer(many=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'tel', 'gender',
+                  'date_joined', 'statistics', 'is_active', 'is_staff', 'photo')
 
 
 class UsersSerializer(serializers.ModelSerializer):
-    dates = LoginDatesSerializer(many=True)
 
     class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name',
-                  'date_joined', 'dates')
+        model = CustomUser
+        fields = ('id', 'first_name', 'last_name')

@@ -1,60 +1,93 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getStats } from "../../actions/stats";
-
+import { getUsers } from "../../actions/stats";
+import Stats from "./Stats";
 export class Form extends Component {
   state = {
-    username: ""
+    id: "",
+    username: "",
+    email: "",
+    first_name: "",
+    last_name: "",
+    date_joined: "",
+    statistics: []
   };
-
   static PropTypes = {
     stats: PropTypes.array.isRequired,
-    getStats: PropTypes.func.isRequired
+    getUsers: PropTypes.func.isRequired
   };
   componentDidMount() {
-    this.props.getStats();
+    this.props.getUsers();
+    $("#users").select2({
+      placeholder: "Search for a user",
+      allowClear: true
+    });
   }
-  onChange = e => this.setState({ [e.target.name]: [e.target.value] });
+  async getStatistics(id) {
+    try {
+      const res = await fetch(`http://localhost:8000/api/stats/${id}`, {
+        method: "GET",
+        body: JSON.stringify(res),
+        credentials: "same-origin", //include, same-origin
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
+      });
+      const data = await res.json();
+      this.setState(data);
+    } catch (e) {
+      alert("hello");
+    }
+  }
   onSubmit = e => {
     e.preventDefault();
-    const { username } = this.state;
-    const stat = { username };
-    this.props.addStat(this.stat);
+    this.getStatistics($("#users").val());
   };
   render() {
-    const { username } = this.state;
     return (
-      <div className="col-md-6 m-auto">
-        <div className="card card-body mt-5">
-          <h2 className="text-center">Select a User</h2>
-          <form onSubmit={this.onSubmit}>
-            <div className="input-group col-md-6 m-auto">
-              <select
-                className="users"
-                style={{ width: "70%" }}
-                type="text"
-                name="user"
-                onChange={this.onChange}
-                value={username}
-              >
-                {this.props.stats.map(stat => (
-                  <option value={stat.id}>{stat.username}</option>
-                ))}
-              </select>
-
-              <div className="input-group-append ">
-                <button
-                  type="submit"
-                  className="btn btn-sm btn-outline-success pull-right "
-                >
-                  Submit
-                </button>
-              </div>
+      <Fragment>
+        <div className="col-md-6 m-auto">
+          <div className="card mt-5">
+            <div class="card-header">
+              <h6 style={{ color: "#61615d" }}>
+                <i className=" far fa-user " /> Users
+              </h6>
             </div>
-          </form>
+            <div className="card-body">
+              <form onSubmit={this.onSubmit}>
+                <div className="form-group">
+                  <select
+                    id="users"
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="user"
+                    required
+                    data-message="First you need to select a user"
+                  >
+                    <option />
+                    {this.props.stats.map(stat => (
+                      <option value={stat.id}>
+                        {stat.first_name} {stat.last_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group ">
+                  <button
+                    type="submit"
+                    className="btn btn-sm btn-success float-right"
+                  >
+                    <i class="fas fa-search" /> Search
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </div>
+        <Stats data={this.state} />
+      </Fragment>
     );
   }
 }
@@ -64,5 +97,5 @@ const mapStatetoProps = state => ({
 });
 export default connect(
   mapStatetoProps,
-  { getStats }
+  { getUsers }
 )(Form);

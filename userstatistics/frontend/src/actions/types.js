@@ -1,6 +1,4 @@
-export const GET_STATS = "GET_STATS";
-export const DELETE_STAT = "DELETE_STAT";
-export const ADD_STAT = "ADD_STAT";
+export const GET_USERS = "GET_USERS";
 export const USER_LOADING = "USER_LOADING";
 export const USER_LOADED = "USER_LOADED";
 export const AUTH_ERROR = "AUTH_ERROR";
